@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>税务稽查风险自测 — 宇守信咨询</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif; background:#f0f2f5; color:#2d3436; padding-bottom:60px; }
+.header { background:linear-gradient(135deg,#0c1445,#1a3a6b); color:white; padding:32px 20px 24px; text-align:center; }
+.header h1 { font-size:22px; font-weight:700; margin-bottom:6px; }
+.header p { font-size:13px; opacity:0.85; }
+.header .badge { display:inline-block; background:rgba(255,255,255,0.2); border-radius:20px; padding:4px 14px; font-size:11px; margin-top:8px; }
+.tabs { display:flex; background:white; box-shadow:0 1px 4px rgba(0,0,0,0.08); position:sticky; top:0; z-index:10; }
+.tab { flex:1; text-align:center; padding:14px 0; font-size:14px; font-weight:500; color:#888; cursor:pointer; border-bottom:3px solid transparent; transition:all .2s; }
+.tab.active { color:#1e3a6f; border-bottom-color:#1e3a6f; }
+.panel { display:none; padding:16px; }
+.panel.active { display:block; }
+.card { background:white; border-radius:12px; overflow:hidden; box-shadow:0 1px 3px rgba(0,0,0,0.06); margin-bottom:12px; }
+.card-title { background:#f0f4ff; padding:10px 16px; font-size:13px; font-weight:600; color:#1e3a6f; border-bottom:1px solid #e0e7ff; }
+.form-row { padding:10px 16px; border-bottom:1px solid #f5f5f5; display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+.form-row label { font-size:13px; color:#444; min-width:150px; flex-shrink:0; }
+.form-row input,.form-row select { padding:8px 12px; border:1px solid #e0e0e0; border-radius:8px; font-size:13px; flex:1; min-width:80px; max-width:200px; background:#fff8e1; line-height:44px; height:44px; }
+.form-row input:focus,.form-row select:focus { outline:none; border-color:#3b82f6; }
+.form-row .unit { font-size:12px; color:#888; }
+.yesno { display:flex; gap:8px; }
+.yesno span { padding:4px 16px; border-radius:16px; font-size:13px; cursor:pointer; border:1px solid #ddd; color:#666; }
+.yesno span.sel-yes { background:linear-gradient(135deg,#0c1445,#1a3a6b); color:white; border-color:#3b82f6; }
+.yesno span.sel-no { background:#e8ecf1; color:#999; border-color:#ddd; }
+.fixed-bottom { position:sticky; bottom:0; background:white; padding:12px 16px; display:flex; gap:10px; box-shadow:0 -2px 8px rgba(0,0,0,0.06); z-index:10; }
+.fixed-bottom button { flex:1; padding:12px; border-radius:10px; font-size:14px; font-weight:600; border:none; cursor:pointer; }
+.btn-primary { background:linear-gradient(135deg,#0c1445,#1a3a6b); color:white; }
+.btn-primary:hover { opacity:0.9; }
+.btn-secondary { background:#e8ecf1; color:#555; }
+
+.score-card { background:linear-gradient(135deg,#0c1445,#1a3a6b); color:white; border-radius:16px; padding:28px 20px; text-align:center; margin-bottom:16px; }
+.score-card .label { font-size:13px; opacity:0.85; }
+.score-card .score { font-size:40px; font-weight:800; margin:6px 0; }
+.score-card .grade { font-size:16px; font-weight:600; margin-bottom:4px; }
+.score-card .suggestion { font-size:13px; opacity:0.9; line-height:1.6; }
+.result-summary { background:linear-gradient(135deg,#0c1445,#1a3a6b); color:white; border-radius:16px; padding:28px 20px; text-align:center; margin-bottom:16px; }
+.result-summary .row { display:flex; justify-content:space-around; margin-top:12px; flex-wrap:wrap; gap:8px; }
+.result-summary .item { flex:1; min-width:100px; }
+.result-summary .item .label { font-size:11px; opacity:0.85; }
+.result-summary .item .val { font-size:22px; font-weight:800; margin:4px 0; }
+.result-summary .item .sub { font-size:12px; opacity:0.85; }
+
+.dim-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:16px; }
+.dim-card { background:white; border-radius:12px; padding:16px; text-align:center; box-shadow:0 1px 3px rgba(0,0,0,0.06); }
+.dim-card .name { font-size:12px; color:#888; margin-bottom:4px; }
+.dim-card .dscore { font-size:20px; font-weight:700; }
+.dim-card .dstatus { font-size:11px; margin-top:4px; padding:2px 10px; border-radius:10px; display:inline-block; }
+.low { background:#e6f7e6; color:#16a34a; }
+.mid { background:#fef9e7; color:#d97706; }
+.high { background:#feeaea; color:#dc2626; }
+.pass { background:#e6f7e6; color:#16a34a; }
+.warn { background:#fef9e7; color:#d97706; }
+.danger { background:#feeaea; color:#dc2626; }
+.fail { background:#feeaea; color:#dc2626; }
+.caution { background:#fef9e7; color:#d97706; }
+.rate-green { background:#e6f7e6; color:#16a34a; }
+.rate-yellow { background:#fef9e7; color:#d97706; }
+.rate-red { background:#feeaea; color:#dc2626; }
+
+.help-card { background:white; border-radius:12px; padding:20px; margin-bottom:12px; box-shadow:0 1px 3px rgba(0,0,0,0.06); }
+.help-card h3 { font-size:15px; margin-bottom:8px; color:#1e3a6f; }
+.help-card p,.help-card li { font-size:13px; color:#555; line-height:1.8; }
+.check-list { list-style:none; padding:0; }
+.check-list li { padding:6px 0; font-size:13px; color:#444; border-bottom:1px solid #f5f5f5; display:flex; align-items:center; gap:8px; }
+.check-list li:last-child { border-bottom:none; }
+.detail-item { padding:12px 16px; border-bottom:1px solid #f5f5f5; display:flex; justify-content:space-between; align-items:center; }
+.detail-item:last-child { border-bottom:none; }
+.detail-item .dlabel { font-size:13px; color:#555; }
+.detail-item .dval { font-size:14px; font-weight:600; }
+.detail-item .dval.pass { color:#16a34a; }
+.detail-item .dval.warn { color:#d97706; }
+.detail-item .dval.danger { color:#dc2626; }
+.result-card { background:white; border-radius:12px; padding:16px; margin-bottom:8px; box-shadow:0 1px 3px rgba(0,0,0,0.06); }
+.result-card h3 { font-size:14px; color:#1e3a6f; margin-bottom:8px; }
+.result-row { display:flex; justify-content:space-between; align-items:center; padding:6px 0; border-bottom:1px solid #f5f5f5; font-size:13px; }
+.result-row:last-child { border-bottom:none; }
+.result-row .label { color:#555; }
+.result-row .val { font-weight:600; }
+.result-row.total { border-top:2px solid #1e3a6f; padding-top:8px; margin-top:4px; font-weight:700; }
+.result-row.total .val { color:#1e3a6f; font-size:16px; }
+.result-green { color:#16a34a; }
+.result-red { color:#dc2626; }
+.result-orange { color:#d97706; }
+
+.member-banner { background:linear-gradient(135deg,#0f0c29,#302b63,#24243e); border-radius:12px; padding:20px; text-align:center; margin-top:16px; }
+.member-banner h3 { font-size:15px; color:white; margin-bottom:6px; }
+.member-banner p { font-size:12px; color:rgba(255,255,255,0.85); line-height:1.6; }
+.member-banner .btn { display:inline-block; background:white; color:#1e3a6f; padding:8px 24px; border-radius:20px; text-decoration:none; font-size:13px; font-weight:600; margin-top:8px; }
+
+.contact { background:#eef2ff; border-radius:8px; padding:12px; }
+.contact strong { font-size:14px; color:#1e3a6f; }
+.scenario-grid { display:flex; gap:8px; }
+.scenario-btn { flex:1; padding:10px; border-radius:8px; font-size:13px; font-weight:600; border:2px solid #ddd; background:white; color:#888; cursor:pointer; text-align:center; transition:all .2s; }
+.scenario-btn.active { border-color:#3b82f6; color:#1e3a6f; background:#eef2ff; }
+.chart-area { background:white; border-radius:16px; padding:20px; box-shadow:0 2px 12px rgba(0,0,0,0.06); margin-bottom:16px; text-align:center; }
+.chart-area canvas { max-width:100%; height:auto; }
+.form-row input[type=range] { flex:1; min-width:120px; max-width:250px; accent-color:#3b82f6; }
+.form-row .val { font-size:14px; font-weight:700; color:#1e3a6f; min-width:30px; text-align:right; }
+.form-row .hint { font-size:11px; color:#999; }
+.dim-card .bar-bg { position:absolute; bottom:0; left:0; height:4px; background:#e8ecf1; width:100%; }
+.dim-card .bar-fill { position:absolute; bottom:0; left:0; height:4px; transition:width .5s; }
+
+@media (max-width:480px){.dim-grid{grid-template-columns:1fr 1fr}.result-summary .row{flex-direction:column;gap:4px}}
+
+
+/* ===== 打印/PDF样式 ===== */
+@media print {
+  body { background:white !important; padding:0 !important; margin:0 !important; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  .fixed-bottom, .no-print, .marketing, [class*="返回"], footer, .footer, #返回, .return-bar, .bottom-bar { display:none !important; }
+  .header { background:linear-gradient(135deg,#0c1445,#1a3a6b) !important; color:white !important; -webkit-print-color-adjust:exact; print-color-adjust:exact; padding:20px 16px !important; }
+  .card, .dim-card, .check-item, .result-card { break-inside:avoid; page-break-inside:avoid; border:1px solid #ddd !important; box-shadow:none !important; }
+  .score-card, .result-summary { -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  .tabs { display:none !important; }
+  .panel { display:block !important; padding:10px !important; }
+  .dim-grid { display:grid !important; grid-template-columns:1fr 1fr !important; gap:8px !important; }
+  .form-row { padding:6px 10px !important; }
+  a[href]:after { content:none !important; }
+}
+
+.pdf-btn { background:linear-gradient(135deg,#b8860b,#d4a843) !important; }
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>🔍 税务稽查风险自测</h1>
+  <p>模拟税务局选案逻辑 · 评估企业被稽查概率</p>
+  <div class="badge">您身边的财税专家 · 洪淳宇</div>
+</div>
+<div class="tabs">
+  <div class="tab active" data-tab="input" onclick="st('input')">📝 填数据</div>
+  <div class="tab" data-tab="report" onclick="st('report')">📊 风险报告</div>
+  <div class="tab" data-tab="help" onclick="st('help')">❓ 说明</div>
+</div>
+
+<div class="panel active" id="p-input">
+  <div class="card">
+    <div class="card-title">🏢 企业基础信息</div>
+    <div class="form-row"><label>企业名称</label><input id="f_企业名称" placeholder="选填"></div>
+    <div class="form-row"><label>所属行业</label>
+      <select id="f_行业" style="padding:8px 12px;border:1px solid #ddd;border-radius:6px;font-size:13px;" onchange="updateIndRef()">
+        <option value="制造业">制造业</option><option value="商贸零售">商贸零售</option>
+        <option value="服务业">服务业</option><option value="建筑业">建筑业</option>
+        <option value="房地产">房地产</option><option value="科技">科技/信息技术</option>
+        <option value="电商">电商/直播</option><option value="其他">其他</option>
+      </select>
+    </div>
+    <div class="form-row"><label>企业成立年限</label>
+      <select id="f_成立年限" style="padding:8px 12px;border:1px solid #ddd;border-radius:6px;font-size:13px;">
+        <option value="1">不足1年</option><option value="3">1~3年</option>
+        <option value="5" selected>3~5年</option><option value="10">5~10年</option>
+        <option value="15">10年以上</option>
+      </select>
+    </div>
+    <div class="form-row"><label>年均营业收入</label>
+      <select id="f_营收规模" style="padding:8px 12px;border:1px solid #ddd;border-radius:6px;font-size:13px;">
+        <option value="100">100万以下</option><option value="500">100万~500万</option>
+        <option value="1000" selected>500万~1000万</option>
+        <option value="5000">1000万~5000万</option>
+        <option value="10000">5000万以上</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">⚠️ 风险指标评估（选择最符合的选项）</div>
+
+    <!-- 行业参考栏 -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 16px;">
+      <div style="display:flex;align-items:center;gap:8px;">
+        <span style="font-size:12px;color:#444;min-width:70px;flex-shrink:0;">增值税税负</span>
+        <span id="indRef_税负" style="padding:8px 12px;background:#fff8e1;border-radius:8px;font-size:13px;color:#1a3a6b;font-weight:600;border:1px solid #e0e0e0;flex:1;text-align:right;line-height:44px;height:44px;">—</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <span style="font-size:12px;color:#444;min-width:70px;flex-shrink:0;">所得税贡献率</span>
+        <span id="indRef_所得税" style="padding:8px 12px;background:#fff8e1;border-radius:8px;font-size:13px;color:#1a3a6b;font-weight:600;border:1px solid #e0e0e0;flex:1;text-align:right;line-height:44px;height:44px;">—</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <span style="font-size:12px;color:#444;min-width:70px;flex-shrink:0;">成本率参考</span>
+        <span id="indRef_成本" style="padding:8px 12px;background:#fff8e1;border-radius:8px;font-size:13px;color:#1a3a6b;font-weight:600;border:1px solid #e0e0e0;flex:1;text-align:right;line-height:44px;height:44px;">—</span>
+      </div>
+    </div>
+
+    <div class="card-title" style="font-size:12px;color:#666;background:#fafafa;">📊 财务异常指标</div>
+    <div class="form-row"><label>增值税税负率与行业对比</label>
+      <select id="f_税负" onchange="updateIndRef()"><option value="0">正常，在行业区间内</option><option value="1" selected>略低，低于行业下限10%以内</option><option value="2">明显偏低，低于行业下限20%以上</option><option value="3">长期接近0或为负</option></select>
+      <span style="font-size:11px;color:#888;" id="ref_税负"></span>
+    </div>
+    <div class="form-row"><label>所得税贡献率</label>
+      <select id="f_所得税" onchange="updateIndRef()"><option value="0">正常，与收入匹配</option><option value="1" selected>略低，利润率偏低</option><option value="2">长期微利或亏损但持续经营</option><option value="3">收入大但所得税几乎为零</option></select>
+      <span style="font-size:11px;color:#888;" id="ref_所得税"></span>
+    </div>
+    <div class="form-row"><label>收入成本配比</label>
+      <select id="f_成本" onchange="updateIndRef()"><option value="0">正常，行业平均水平</option><option value="1" selected>成本率偏高，波动较大</option><option value="2">成本率异常高，长期亏损</option><option value="3">成本大于收入，严重倒挂</option></select>
+      <span style="font-size:11px;color:#888;" id="ref_成本"></span>
+    </div>
+    <div class="form-row"><label>发票使用情况</label>
+      <select id="f_发票"><option value="0">规范，票流一致</option><option value="1" selected>偶有缺进项票/滞后开票</option><option value="2">频繁作废/红冲/顶额开票</option><option value="3">涉嫌虚开/无业务开票/发票异常预警</option></select>
+    </div>
+    <div class="form-row"><label>往来款项</label>
+      <select id="f_往来"><option value="0">正常结算，无长期挂账</option><option value="1">有部分长期应收/应付挂账</option><option value="2" selected>其他应收/应付金额大且长期挂账</option><option value="3">股东借款/关联往来异常大</option></select>
+    </div>
+
+    <div class="card-title" style="font-size:12px;color:#666;background:#fafafa;">🏛️ 行为特征指标</div>
+    <div class="form-row"><label>纳税申报规范性</label>
+      <select id="f_申报"><option value="0">按时准确申报</option><option value="1" selected>偶有逾期或更正申报</option><option value="2">频繁更正/补充申报</option><option value="3">长期零申报/逾期不报</option></select>
+    </div>
+    <div class="form-row"><label>税务检查历史</label>
+      <select id="f_检查"><option value="0">从未被检查</option><option value="1" selected>3年前被检查过，无问题</option><option value="2">近3年被检查过，有补税</option><option value="3">近1年有处罚/被移送稽查</option></select>
+    </div>
+    <div class="form-row"><label>行业关注度</label>
+      <select id="f_行业关注"><option value="0">传统行业，非重点监控</option><option value="1" selected>一般关注行业</option><option value="2">重点监控行业（电商/医美/直播/灵活用工等）</option><option value="3">专项整治行业（当前年度重点）</option></select>
+    </div>
+    <div class="form-row"><label>企业变更情况</label>
+      <select id="f_变更"><option value="0">无异常变更</option><option value="1">近1年有法人/股东变更</option><option value="2" selected>频繁变更法人/股东/注册地</option><option value="3">已列入经营异常/有工商处罚记录</option></select>
+    </div>
+  </div>
+
+  <div class="fixed-bottom">
+    <button class="btn-secondary" onclick="resetAll()">清空</button>
+    <button class="btn-primary" onclick="calc()">📊 评估风险</button>
+  </div>
+</div>
+
+<div class="panel" id="p-report">
+  <div id="scoreCard" class="score-card">
+    <div class="label">稽查风险评分</div>
+    <div class="score">—</div>
+    <div class="grade">请先在「填数据」页录入信息</div>
+    <div class="suggestion"></div>
+  </div>
+  <div id="dimGrid" class="dim-grid"></div>
+  <div class="card">
+    <div class="card-title">📋 风险明细</div>
+    <div id="riskItems"></div>
+  </div>
+  <div class="fixed-bottom">
+    <button class="btn-secondary" onclick="st('input')">← 修改数据</button>
+    <button class="btn-primary" onclick="shareResult()">📤 分享</button>
+  </div>
+</div>
+
+<div class="panel" id="p-help">
+  <div class="help-card">
+    <h3>📋 使用说明</h3>
+    <ol><li>在「填数据」页选择企业信息和风险指标</li><li>点击「评估风险」自动计算稽查风险评分</li><li>查看各维度风险等级和改善建议</li></ol>
+  </div>
+  <div class="help-card">
+    <h3>📊 评估维度</h3>
+    <p><strong>财务异常（60%）</strong> — 税负率、所得税贡献、成本配比、发票、往来款</p>
+    <p><strong>行为特征（40%）</strong> — 申报规范、检查历史、行业关注、变更异常</p>
+  </div>
+  <div class="help-card">
+    <h3>评分说明</h3>
+    <p><span style="color:#16a34a">● 低风险</span> — 0~20分，暂时安全</p>
+    <p><span style="color:#d97706">● 中等风险</span> — 21~40分，建议自查</p>
+    <p><span style="color:#dc2626">● 高风险</span> — 41~60分，建议立即排查</p>
+    <p><span style="color:#991b1b">● 极高风险</span> — 61分以上，强烈建议专业介入</p>
+  </div>
+  <div class="help-card">
+    <h3>👤 关于作者</h3>
+    <div class="contact">
+      <strong>洪淳宇 · 您身边的财税专家</strong>
+      <p>专注税务稽查应对、财税合规检查、税负优化与筹划</p>
+      <p style="margin-top:6px;">📞 186-0129-4989 | 💬 hongchunyu042896</p>
+    </div>
+  </div>
+</div>
+
+<script>
+// ===== 行业参考数据 =====
+const IND_REF = {
+  "制造业": {税负:"2.5%~3.5%",所得税:"1.0%~1.5%",成本率:"75%~85%"},
+  "商贸零售": {税负:"1.0%~2.0%",所得税:"0.5%~1.0%",成本率:"80%~90%"},
+  "服务业": {税负:"3.0%~5.0%",所得税:"1.5%~2.5%",成本率:"50%~65%"},
+  "建筑业": {税负:"2.0%~3.0%",所得税:"0.8%~1.2%",成本率:"80%~88%"},
+  "房地产": {税负:"4.0%~6.0%",所得税:"2.0%~3.0%",成本率:"65%~75%"},
+  "科技": {税负:"3.0%~5.0%",所得税:"1.5%~3.0%",成本率:"40%~55%"},
+  "其他": {税负:"—",所得税:"—",成本率:"—"}
+};
+
+function updateIndRef() {
+  var indName = document.getElementById('f_行业') ? document.getElementById('f_行业').value : '其他';
+  var ref = IND_REF[indName] || IND_REF["其他"];
+  document.getElementById('ref_税负').textContent = '（行业参考：' + ref['税负'] + '）';
+  document.getElementById('ref_所得税').textContent = '（行业参考：' + ref['所得税'] + '）';
+  document.getElementById('ref_成本').textContent = '（行业参考：' + ref['成本率'] + '）';
+  document.getElementById('indRef_税负').textContent = ref['税负'];
+  document.getElementById('indRef_所得税').textContent = ref['所得税'];
+  document.getElementById('indRef_成本').textContent = ref['成本率'];
+}
+
+const DIMS = {
+  "财务异常": { max: 60, items: ["税负","所得税","成本","发票","往来"] },
+  "行为特征": { max: 40, items: ["申报","检查","行业关注","变更"] }
+};
+
+function g(id) {
+  const el = document.getElementById("f_"+id);
+  return el ? parseInt(el.value)||0 : 0;
+}
+
+function calc() {
+  const items = {};
+  const keys = ["税负","所得税","成本","发票","往来","申报","检查","行业关注","变更"];
+  let total = 0;
+  keys.forEach(k => { items[k] = g(k); total += g(k); });
+
+  // 各维度得分
+  let 财务得分 = g("税负")+g("所得税")+g("成本")+g("发票")+g("往来");
+  let 行为得分 = g("申报")+g("检查")+g("行业关注")+g("变更");
+  if (财务得分 > 15) 财务得分 = 15;
+  if (行为得分 > 10) 行为得分 = 10;
+  const rawScore = Math.round((财务得分/15)*60 + (行为得分/10)*40);
+  const score = Math.min(100, rawScore);
+
+  let grade, suggestion, color;
+  if (score <= 20) { grade = "🟢 低风险"; suggestion = "🎉 整体风险较低，继续保持合规经营"; color = "#16a34a"; }
+  else if (score <= 40) { grade = "🟡 中等风险"; suggestion = "📌 部分指标需关注，建议针对高风险项进行自查"; color = "#d97706"; }
+  else if (score <= 60) { grade = "🟠 高风险"; suggestion = "⚠️ 风险偏高，建议尽快进行全面财税排查"; color = "#dc2626"; }
+  else { grade = "🔴 极高风险"; suggestion = "🚨 稽查风险极高，强烈建议立即请专业顾问介入！"; color = "#991b1b"; }
+
+  document.getElementById("scoreCard").innerHTML =
+    `<div class="label">稽查风险评分</div>
+     <div class="score">${score}/100</div>
+     <div class="grade">${grade}</div>
+     <div class="suggestion">${suggestion}</div>`;
+
+  // 维度卡片
+  const dimData = {
+    "税负异常": { s: g("税负"), max: 3, l: ["正常","略低","明显偏低","长期为负"] },
+    "所得税异常": { s: g("所得税"), max: 3, l: ["正常","略低","长期微利","几乎为零"] },
+    "成本配比": { s: g("成本"), max: 3, l: ["正常","偏高","异常高","严重倒挂"] },
+    "发票风险": { s: g("发票"), max: 3, l: ["规范","偶有问题","频繁异常","涉嫌虚开"] },
+    "往来异常": { s: g("往来"), max: 3, l: ["正常","部分挂账","长期挂账","股东借款"] },
+    "申报规范": { s: g("申报"), max: 3, l: ["按时","偶有逾期","频繁更正","长期零申报"] },
+    "检查历史": { s: g("检查"), max: 3, l: ["无","3年前有","近3年有补税","近1年处罚"] },
+    "行业关注": { s: g("行业关注"), max: 3, l: ["非重点","一般","重点监控","专项整治"] },
+    "企业变更": { s: g("变更"), max: 3, l: ["无异常","有变更","频繁变更","经营异常"] }
+  };
+
+  const grid = document.getElementById("dimGrid");
+  grid.innerHTML = Object.entries(dimData).map(([k,v]) => {
+    const pct = v.s > 0 ? Math.round(v.s/v.max*100) : 0;
+    let cls = "low", label = "低";
+    if (pct >= 66) { cls = "high"; label = "高"; }
+    else if (pct >= 33) { cls = "mid"; label = "中"; }
+    return `<div class="dim-card">
+      <div class="name">${k}</div>
+      <div class="dscore" style="color:${cls==='high'?'#dc2626':cls==='mid'?'#d97706':'#16a34a'}">${v.l[v.s]}</div>
+      <div class="dstatus ${cls}">${label}风险</div>
+    </div>`;
+  }).join("");
+
+  // 明细表
+  const container = document.getElementById("riskItems");
+  var indName = document.getElementById('f_行业') ? document.getElementById('f_行业').value : '其他';
+  var indRef = IND_REF[indName] || IND_REF["其他"];
+  const order = ["税负异常","所得税异常","成本配比","发票风险","往来异常","申报规范","检查历史","行业关注","企业变更"];
+  container.innerHTML = `<div style="display:flex;padding:8px 16px;font-size:12px;font-weight:600;color:#1e3a6f;background:#f0f4ff;border-bottom:1px solid #e0e7ff;">
+    <span style="flex:1.2">指标</span>
+    <span style="flex:1">当前状态</span>
+    <span style="flex:0.8;text-align:center">行业参考</span>
+    <span style="flex:0.6;text-align:center">风险等级</span>
+  </div>` + order.map(k => {
+    const v = dimData[k];
+    const pct = v.s > 0 ? Math.round(v.s/v.max*100) : 0;
+    let cls = "status-green", txt = "✓ 低风险";
+    if (pct >= 66) { cls = "status-red"; txt = "✗ 高风险"; }
+    else if (pct >= 33) { cls = "status-yellow"; txt = "⚠ 中风险"; }
+    // 行业参考
+    var refTxt = '—';
+    if (k === '税负异常') refTxt = indRef['税负'] || '—';
+    else if (k === '所得税异常') refTxt = indRef['所得税'] || '—';
+    else if (k === '成本配比') refTxt = indRef['成本率'] || '—';
+    return `<div style="display:flex;padding:10px 16px;border-bottom:1px solid #f0f0f0;font-size:13px;align-items:center;">
+      <span style="flex:1.2">${k}</span>
+      <span style="flex:1;color:#666">${v.l[v.s]}</span>
+      <span style="flex:0.8;text-align:center;color:#888;font-size:12px">${refTxt}</span>
+      <span style="flex:0.6;text-align:center" class="${cls}">${txt}</span>
+    </div>`;
+  }).join("");
+
+  st("report");
+}
+
+function st(name) {
+  document.querySelectorAll(".tab").forEach(t => t.classList.toggle("active", t.dataset.tab === name));
+  document.querySelectorAll(".panel").forEach(p => p.classList.toggle("active", p.id === "p-"+name));
+  window.scrollTo(0,0);
+}
+
+function resetAll() {
+  if (!confirm("确定要清空所有数据吗？")) return;
+  document.querySelectorAll("#p-input select").forEach(el => el.selectedIndex = 0);
+  document.querySelectorAll("#p-input input").forEach(el => el.value = "");
+}
+
+function shareResult() { alert("📱 请截屏保存本页面，即可分享给客户！"); }
+
+document.addEventListener("DOMContentLoaded", function() {
+  st("input");
+  updateIndRef();
+});
+
+function downloadPDF(){
+  window.print();
+}
+</script>
+
+
+    <div style="background:white;border-radius:12px;padding:14px;box-shadow:0 1px 4px rgba(0,0,0,.08);display:flex;flex-direction:column;align-items:flex-start;">
+      <div style="font-size:28px;margin-bottom:4px;">📋</div>
+      <div style="font-size:13px;font-weight:700;color:#1e3a6f;margin-bottom:2px;">发票合规自检</div>
+      <div style="font-size:11px;color:#888;margin-bottom:6px;line-height:1.4;">44项发票合规红线逐条对照</div>
+      <a href="https://sparrow528.github.io/invoice-check/" target="_blank" style="display:inline-block;padding:5px 14px;background:linear-gradient(135deg,#0c1445,#1a3a6b);color:white;border-radius:6px;font-size:11px;text-decoration:none;font-weight:600;">使用 →</a>
+    </div>
+    <div style="background:white;border-radius:12px;padding:14px;box-shadow:0 1px 4px rgba(0,0,0,.08);display:flex;flex-direction:column;align-items:flex-start;">
+      <div style="font-size:28px;margin-bottom:4px;">📈</div>
+      <div style="font-size:13px;font-weight:700;color:#1e3a6f;margin-bottom:2px;">企业所得税汇算清缴自检</div>
+      <div style="font-size:11px;color:#888;margin-bottom:6px;line-height:1.4;">收入确认·税前扣除·纳税调整</div>
+      <a href="https://sparrow528.github.io/settlement-check/" target="_blank" style="display:inline-block;padding:5px 14px;background:linear-gradient(135deg,#0c1445,#1a3a6b);color:white;border-radius:6px;font-size:11px;text-decoration:none;font-weight:600;">使用 →</a>
+    </div>
+    <div style="background:white;border-radius:12px;padding:14px;box-shadow:0 1px 4px rgba(0,0,0,.08);display:flex;flex-direction:column;align-items:flex-start;">
+      <div style="font-size:28px;margin-bottom:4px;">📉</div>
+      <div style="font-size:13px;font-weight:700;color:#1e3a6f;margin-bottom:2px;">企业成本费用分析</div>
+      <div style="font-size:11px;color:#888;margin-bottom:6px;line-height:1.4;">成本结构·费用占比·异常预警</div>
+      <a href="https://sparrow528.github.io/cost-analysis/" target="_blank" style="display:inline-block;padding:5px 14px;background:linear-gradient(135deg,#0c1445,#1a3a6b);color:white;border-radius:6px;font-size:11px;text-decoration:none;font-weight:600;">使用 →</a>
+    </div>
+    <div style="background:white;border-radius:12px;padding:14px;box-shadow:0 1px 4px rgba(0,0,0,.08);display:flex;flex-direction:column;align-items:flex-start;">
+      <div style="font-size:28px;margin-bottom:4px;">🔄</div>
+      <div style="font-size:13px;font-weight:700;color:#1e3a6f;margin-bottom:2px;">进销项匹配与异常预警</div>
+      <div style="font-size:11px;color:#888;margin-bottom:6px;line-height:1.4;">自动检测进销项异常与风险</div>
+      <a href="https://sparrow528.github.io/invoice-match-check/" target="_blank" style="display:inline-block;padding:5px 14px;background:linear-gradient(135deg,#0c1445,#1a3a6b);color:white;border-radius:6px;font-size:11px;text-decoration:none;font-weight:600;">使用 →</a>
+    </div>
+    <div style="background:white;border-radius:12px;padding:14px;box-shadow:0 1px 4px rgba(0,0,0,.08);display:flex;flex-direction:column;align-items:flex-start;">
+      <div style="font-size:28px;margin-bottom:4px;">💰</div>
+      <div style="font-size:13px;font-weight:700;color:#1e3a6f;margin-bottom:2px;">企业现金流压力测试</div>
+      <div style="font-size:11px;color:#888;margin-bottom:6px;line-height:1.4;">应收账款·应付账款·现金流预测</div>
+      <a href="https://sparrow528.github.io/cashflow-checkup/" target="_blank" style="display:inline-block;padding:5px 14px;background:linear-gradient(135deg,#0c1445,#1a3a6b);color:white;border-radius:6px;font-size:11px;text-decoration:none;font-weight:600;">使用 →</a>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
